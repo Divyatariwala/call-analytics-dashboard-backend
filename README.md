@@ -19,10 +19,10 @@ This backend powers the analytics and visualization features of the dashboard by
 
 ### Backend
 - **Node.js & Express.js** – Server and API framework  
-- **MongoDB / PostgreSQL** – Database for storing call records and user data  
+- **MongoDB** – Database for storing call records and user data  
 - **JWT (JSON Web Tokens)** – Authentication and secure access  
-- **Mongoose / Sequelize** – Database modeling and queries  
-- **Cors & Body-parser** – Middleware for request handling  
+- **Mongoose** – Database modeling and queries  
+- **Cors** – Middleware for request handling  
 
 ### API & Authentication
 - **RESTful API Endpoints** – Expose data to the frontend  
@@ -30,7 +30,7 @@ This backend powers the analytics and visualization features of the dashboard by
 - **Validation & Error Handling** – Ensures secure and reliable operations  
 
 ### Deployment Options
-- **Render / Railway / Heroku** – Recommended platforms for hosting the backend  
+- **Render** – Recommended platforms for hosting the backend  
 
 ---
 
