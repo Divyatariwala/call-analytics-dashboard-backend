@@ -53,3 +53,64 @@ git clone <https://github.com/Divyatariwala/call-analytics-dashboard-backend>
 5. Live Deployment
 Access the deployed backend (if hosted) here:
 https://call-analytics-dashboard-backend.onrender.com
+
+
+ API Endpoints
+
+All endpoints require JWT authentication, including login and registration.
+
+Method	Endpoint	            Description	                    Auth Required
+POST	/api/auth/register	   Register a new user	                 Yes
+POST	/api/auth/login	       Login with email and password	     Yes
+GET	    /api/calls	           Fetch all call records (CDRs)	     Yes
+POST	/api/calls	           Add a new call record	             Yes
+GET	    /api/calls/:id	       Fetch a specific call record by ID	 Yes
+
+Sample Requests
+Login Example
+
+POST /api/auth/login
+Authorization: Bearer <JWT Token>
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "12345"
+}
+
+Response
+
+{
+  "token": "<JWT Token>",
+  "user": {
+    "id": "123",
+    "name": "Divya Tariwala",
+    "role": "admin"
+  }
+}
+
+Add New Call Example
+
+POST /api/calls
+Authorization: Bearer <JWT Token>
+Content-Type: application/json
+
+{
+  "caller": "1234567890",
+  "receiver": "0987654321",
+  "duration": 300,
+  "status": "successful",
+  "cost": 2.5
+}
+
+Response
+
+{
+  "id": "1",
+  "caller": "1234567890",
+  "receiver": "0987654321",
+  "duration": 300,
+  "status": "successful",
+  "cost": 2.5,
+  "timestamp": "2026-03-23T10:00:00.000Z"
+}
