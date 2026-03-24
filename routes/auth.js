@@ -24,26 +24,32 @@ router.post(
   ],
   async (req, res) => {
     try {
-      // VALIDATION CHECK
       const errors = validationResult(req);
+
+      // Validation error
       if (!errors.isEmpty()) {
         return res.status(400).json({
-          msg: errors.array()[0].msg
+          success: false,
+          message: errors.array()[0].msg
         });
       }
 
       const { name, email, password } = req.body;
 
-      // CHECK EXISTING USER
+      // Check if user exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ msg: "User already exists" });
+        return res.status(409).json({
+          success: false,
+          message: "User already exists"
+        });
       }
 
-      // HASH PASSWORD
+      // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
+      // Create user
       const newUser = new User({
         name,
         email,
@@ -52,17 +58,21 @@ router.post(
 
       await newUser.save();
 
+      // Success
       res.status(201).json({
-        msg: "User registered successfully"
+        success: true,
+        message: "User registered successfully"
       });
 
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
     }
   }
 );
-
 
 /* ---------------- LOGIN ---------------- */
 router.post(
@@ -78,36 +88,46 @@ router.post(
   ],
   async (req, res) => {
     try {
-      // VALIDATION CHECK
       const errors = validationResult(req);
+
+      // Validation error
       if (!errors.isEmpty()) {
         return res.status(400).json({
-          msg: errors.array()[0].msg
+          success: false,
+          message: errors.array()[0].msg
         });
       }
 
       const { email, password } = req.body;
 
-      // CHECK USER
+      // Check user
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(404).json({ msg: "User not found" });
+        return res.status(404).json({
+          success: false,
+          message: "User not found"
+        });
       }
 
-      // CHECK PASSWORD
+      // Check password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ msg: "Invalid password" });
+        return res.status(401).json({
+          success: false,
+          message: "Invalid credentials"
+        });
       }
 
-      // GENERATE TOKEN
+      // Generate token
       const token = jwt.sign(
         { id: user._id, role: user.role },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
       );
 
-      res.json({
+      // Success
+      res.status(200).json({
+        success: true,
         token,
         user: {
           id: user._id,
@@ -118,7 +138,10 @@ router.post(
 
     } catch (err) {
       console.error(err);
-      res.status(500).json({ msg: "Server error" });
+      res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
     }
   }
 );
